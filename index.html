@@ -273,6 +273,12 @@
         border-left: 4px solid var(--acid-yellow);
         padding-left: 0.8rem;
       }
+      .hero p strong {
+        background: var(--black);
+        color: var(--acid-yellow);
+        padding: 0 4px;
+        font-weight: 900;
+      }
 
       /* MISSION CARDS ADATTIVE */
       .mission-card {
@@ -650,23 +656,26 @@
       .bg-A {
         background-image: url("asset/Coinquilini strani.png");
         background-color: var(--white);
-        background-size: cover;
+        background-size: contain;
         background-position: center;
       }
       .bg-B {
         background-image: url("asset/Regia_del_delirio.png");
         background-color: var(--white);
-        background-size: cover;
+        background-size: contain;
         background-position: center;
       }
       .bg-C {
         background-image: url("https://img.freepik.com/free-photo/blue-bird-perched-branch_23-2148110260.jpg");
         background-color: #ffffff;
-        background-size: cover;
+        background-size: contain;
         background-position: center;
       }
       .bg-D {
-        background-color: #3f3f46;
+        background-image: url("https://img.freepik.com/free-photo/blue-bird-perched-branch_23-2148110260.jpg");
+        background-color: #ffffff;
+        background-size: contain;
+        background-position: center;
       }
 
       @keyframes scanline {
@@ -784,27 +793,6 @@
           ><span>04</span> GIARDINO OLOGRAFICO</a
         >
       </div>
-
-      <h2
-        style="
-          font-family: 'Silkscreen';
-          color: var(--acid-yellow);
-          margin-top: 4rem;
-          font-size: 0.8rem;
-        "
-      >
-        IL MANIFESTO
-      </h2>
-      <p
-        style="
-          margin-top: 1rem;
-          font-weight: 800;
-          color: white;
-          font-size: 0.9rem;
-        "
-      >
-        Abbiamo smesso di scrollare. Abbiamo iniziato a guardare.
-      </p>
     </div>
 
     <div class="container">
@@ -857,7 +845,7 @@
 
         <section class="hero">
           <h1>Ora sei un tinfoiliano</h1>
-          <h2><span>(ps. il cappello ti sta benissimo)</span></h2>
+          <h2><span>ps. il cappello ti sta benissimo</span></h2>
           <p>
             benvenuto su tinfoil hat dove l’alluminio è l’unico firewall che ci
             tiene ancora <strong>(orgogliosamente)</strong> fuori di testa
@@ -1096,9 +1084,7 @@
         </div>
 
         <div class="article-content">
-          <div class="article-meta-box" id="article-meta">
-            <span>REPORT METADATA</span>LOADING...
-          </div>
+          <div class="article-meta-box" id="article-meta">LOADING...</div>
           <div class="article-header">
             <h1 id="article-title">TITOLO DOSSIER</h1>
           </div>
@@ -1158,7 +1144,7 @@
                    <p>Il sangue estratto serve solo come supporto per i dati: il Sistema ha bisogno di verificare costantemente la vostra stabilità molecolare per essere sicuro che stiate ancora processando correttamente la realtà che vi viene somministrata. E se pensate che la bolla rossa che compare dopo sia una reazione allergica, siete rimasti al tutorial della biologia da asilo. Quel prurito è la prova che il <strong>nanotracker liquido</strong> è stato iniettato con successo sotto la vostra pelle. È un’antenna temporanea, un sensore chimico che mappa i vostri spostamenti per 48 ore consecutive, tracciando ogni singola vibrazione dei vostri muscoli. </p>
                    <p>L’unico modo per interrompere il flusso di dati prima che il prelievo diventi irreversibile è avere sempre a portata di mano la racchetta elettrica <strong><em>Insect Killer di Flortis</em></strong>. Non si tratta di un accessorio da giardino, ma di un vero e proprio <strong>generatore di scariche ad alto voltaggio</strong> progettato per mandare in corto circuito i processori alari dei zanza-droni, friggendo i loro sensori prima che possano iniettare il tracker. </p>
                    <p>Se schiacciandone una vedete uscire del rosso, ricordatevi che quello è il vostro <strong>backup genetico</strong> che sta venendo caricato sul server mentre voi cercate inutilmente di dormire in una stanza che è diventata un <strong>laboratorio di analisi clandestino</strong>.</p>
-                   <a href="https://www.flortis.it/ita/animali-molesti/zanzare/dispositivi-elettrici/racchetta-elettrica-insect-killer target="_blank"><img src="asset/Advertorial.png" alt="Insect Killer di Flortis" style="width: 100%; border: var(--ui-border); margin-top: 1.5rem; display: block; background: white;"></a>`,
+                   <a href="https://www.flortis.it/ita/animali-molesti/zanzare/dispositivi-elettrici/racchetta-elettrica-insect-killer" target="_blank"><img src="asset/Advertorial.png" alt="Insect Killer di Flortis" style="width: 100%; border: var(--ui-border); margin-top: 1.5rem; display: block; background: white;"></a>`,
             sources: [],
           },
           {
@@ -1273,6 +1259,7 @@
             author: "Chia",
             risk: "MED",
             time: "2 MIN",
+            articleImg: "asset/Tatuaggio_donna.png",
             lead: "Se pensate che il classico cuore rosso con la scritta 'MOM' sia solo un tributo commovente alla donna che vi ha messo al mondo, siete caduti nella trappola emotiva più vecchia della storia.",
             body: `<p>Se pensate che il classico cuore rosso con la scritta "MOM" sia solo un tributo commovente alla donna che vi ha messo al mondo, siete caduti nella <strong>trappola emotiva più vecchia della storia</strong>. La realtà è molto più specifica e decisamente meno casta. Quell'ancora col cuore o quel font old school non sono un omaggio alla propria madre, ma il segnale di riconoscimento definitivo per l’<strong>Ordine delle Milf (ODM)</strong>, una fratellanza segreta che opera tra i bar di periferia e gli studi di tatuaggi più loschi del mondo. Tatuarsi "MOM" non è un atto di devozione filiale, è un’autodichiarazione di intenti: è il <strong>codice d'accesso</strong> per una rete sotterranea di cacciatori di madri degli altri.</p>
                    <p>Il cuore rosso funge da segnaletica stradale per gli iniziati. Avete mai notato come chi ha questo tatuaggio sembri always avere quel <strong>sorriso d'intesa</strong> quando incrocia una mamma al parchetto? Non è gentilezza, è recognition del target. La leggenda della "mamma" è stata creata solo per permettere a questa setta di girare indisturbata: se un poliziotto o la tua ragazza ti vedono quel tatuaggio, pensano "oh, che tesoro di ragazzo", mentre in realtà stai portando sulla pelle il <strong>badge magnetico</strong> per i raduni clandestini nei seminterrati dei bingo.</p>`,
@@ -1330,6 +1317,7 @@
             author: "Chia",
             risk: "HIGH",
             time: "3 MIN",
+            articleImg: "asset/aereo_scie.png",
             lead: "Stanno aspettando che il Wi-Fi delle scie chimiche si colleghi ai tuoi neuroni.",
             body: `<p>Mentre i passeggero medi con il cuscino da viaggio al collo si lamentano dei ritardi di tre ore per un volo low cost, noi che abbiamo scaricato la <strong>patch del risveglio</strong> sappiamo che il tabellone delle partenze è solo un'interfaccia di caricamento per una realtà parallela. Non fatevi fregare dalla scusa del "traffico aereo" o del "guasto tecnico"; la verità è che il tuo volo per Ibiza è in ritardo perché i tecnici di manutenzione hanno bisogno di tempo per ricaricare le <strong>cartucce di inchiostro chimico</strong> nei serbatoi delle ali. Le famose scie che vedi nel cielo non sono condensa e non servono nemmeno più a controllare il meteo (quella è roba da boomer complottisti del 2010) oggi le scie chimiche sono letteralmente dei <strong>cavi in fibra ottica gassosa</strong> che servono a trasmettere il segnale Wi-Fi direttamente nei tuoi sogni. Se il tuo aereo non parte, è semplicemente perché il server dei cieli sta facendo un aggiornamento forzato e deve aspettare che il "fumo magico" si depositi correttamente sopra le città per sincronizzare i nostri desideri con gli sconti del Prime Day.</p>
                    <p>Il vero delirio inizia quando capisci che il ritardo al gate è una tecnica di condizionamento psicologico per abbassare le tue difese immunitarie al <strong>brainrot</strong> e prepararti all'inalazione forzata ad alta quota. Ogni volta che una hostess ti sorride dicendo che "stiamo aspettando l'autorizzazione della torre di controllo", sta in realtà verificando che il tuo <strong>microchip sottocutaneo</strong> sia configurato correttamente per ricevere le frequenze trasmesse dalle scie degli aerei precedenti. Gli aerei che girano a vuoto sopra l'aeroporto non stanno consumando carburante, stanno letteralmente "disegnando" una <strong>rete neurale nel cielo</strong> per impedirci di vedere che le nuvole sono in realtà dei pixel a bassa risoluzione messi lì per nascondere che il sole è una lampadina LED gigante a risparmio energetico. Se guardi bene fuori dal finestrino durante il decollo e senti un ronzio nelle orecchie, congratulazioni: sei stato appena collegato al <strong>Bluetooth atmosferico del Sistema</strong> e il tuo prossimo pensiero non sarà il tuo, ma un file .mp3 caricato direttamente dal Ministero delle Vacanze Obbligatorie.</p>
@@ -1422,7 +1410,7 @@
         document.getElementById("article-body").innerHTML = item.body;
         document.getElementById(
           "article-meta"
-        ).innerHTML = `<span>REPORT METADATA</span>AUTH: ${item.author.toUpperCase()} // TIME: ${
+        ).innerText = `AUTH: ${item.author.toUpperCase()} // TIME: ${
           item.time || "2 MIN"
         }`;
 
