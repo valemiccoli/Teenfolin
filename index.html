@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Tinfoil Hat - Sorellanza Risvegliata</title>
+    <!-- Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* RESET E OTTIMIZZAZIONE MOBILE ESTREMA */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      :root {
+        --acid-yellow: #ccff00;
+        --black: #000000;
+        --white: #ffffff;
+        --silver-foil: #94a3b8;
+        --zinc-900: #18181b;
+        --zinc-100: #f4f4f5;
+        --zinc-200: #e4e4e7;
+        --safe-top: env(safe-area-inset-top, 20px);
+        --safe-bottom: env(safe-area-inset-bottom, 20px);
+        --side-padding: 1.25rem;
+        --ui-border: 3px solid #000000;
+      }
+
+      /* Fluidità totale per smartphone */
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: var(--black);
+        font-family: "Inter", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+      }
+
+      /* Container fluido per mobile */
+      .container {
+        width: 100%;
+        max-width: 500px;
+        height: 100dvh;
+        background-color: var(--white);
+        position: relative;
+        border-left: var(--ui-border);
+        border-right: var(--ui-border);
+        overflow: hidden;
+      }
+
+      /* VISTE */
+      .view {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--white);
+        display: none;
+        flex-direction: column;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .view.active {
+        display: flex;
+      }
+
+      /* ANIMAZIONI */
+      @keyframes ticker {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+        }
+        to {
+          transform: translateX(0);
+        }
+      }
+
+      /* SPLASH PAGE */
+      #splash-screen {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 500px;
+        height: 100dvh;
+        background: var(--black);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: var(--acid-yellow);
+        padding: var(--side-padding);
+        transition: opacity 0.5s ease;
+        overflow-y: auto;
+      }
+
+      .splash-logo {
+        font-family: "Silkscreen", monospace;
+        font-size: clamp(2.5rem, 15vw, 4rem);
+        line-height: 1;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: var(--acid-yellow);
+        text-shadow: 4px 4px 0px rgba(255, 255, 255, 0.1);
+        letter-spacing: -2px;
+      }
+
+      .splash-intro {
+        font-weight: 900;
+        font-size: clamp(0.65rem, 3.5vw, 0.85rem);
+        text-align: center;
+        text-transform: uppercase;
+        margin-bottom: 2rem;
+        color: var(--white);
+        max-width: 85%;
+        line-height: 1.4;
+      }
+
+      .splash-sisters {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 2.5rem;
+        justify-content: center;
+        align-items: flex-end;
+        width: 100%;
+      }
+
+      .sister-char {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+      }
+
+      .char-img-container {
+        width: 100%;
+        max-width: 100px;
+        aspect-ratio: 3/4;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+      }
+
+      .sister-portrait {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .sister-name {
+        font-family: "Silkscreen", monospace;
+        font-size: clamp(0.4rem, 2.5vw, 0.6rem);
+        text-align: center;
+        display: block;
+        margin-top: 0.5rem;
+        background: var(--black);
+        color: var(--white);
+        border: 1px solid var(--acid-yellow);
+        padding: 4px 6px;
+        letter-spacing: 1px;
+        white-space: nowrap;
+      }
+
+      .splash-btn {
+        background: var(--acid-yellow);
+        color: var(--black);
+        border: var(--ui-border);
+        padding: 1.2rem 2rem;
+        font-family: "Silkscreen", monospace;
+        font-size: clamp(0.7rem, 4vw, 0.9rem);
+        font-weight: 900;
+        text-transform: uppercase;
+        box-shadow: 6px 6px 0 var(--silver-foil);
+        cursor: pointer;
+        margin-top: 1rem;
+        flex-shrink: 0;
+      }
+
+      /* HEADER & NAV */
+      .header-fixed {
+        position: sticky;
+        top: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        z-index: 100;
+        border-bottom: var(--ui-border);
+      }
+
+      .nav-inner {
+        padding: 0.8rem var(--side-padding);
+        padding-top: calc(0.8rem + var(--safe-top));
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .live-ticker {
+        background: var(--black);
+        color: var(--acid-yellow);
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        border-bottom: var(--ui-border);
+      }
+
+      .ticker-content {
+        display: flex;
+        white-space: nowrap;
+        animation: ticker 45s linear infinite;
+        font-family: "Silkscreen", monospace;
+        font-size: 0.65rem;
+      }
+
+      .ticker-item {
+        padding-right: 4rem;
+      }
+
+      /* HERO */
+      .hero {
+        padding: 2rem var(--side-padding);
+      }
+      .hero h1 {
+        font-size: clamp(2.2rem, 12vw, 3rem);
+        line-height: 0.85;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: -0.05em;
+      }
+      .hero h2 {
+        font-size: clamp(1.1rem, 5vw, 1.4rem);
+        font-weight: 900;
+        line-height: 1.1;
+      }
+      .hero h2 span {
+        background: var(--black);
+        color: var(--acid-yellow);
+        padding: 0 0.3rem;
+      }
+      .hero p {
+        font-weight: 600;
+        margin-top: 0.8rem;
+        font-size: 0.9rem;
+        border-left: 4px solid var(--acid-yellow);
+        padding-left: 0.8rem;
+      }
+
+      /* MISSION CARDS ADATTIVE */
+      .mission-card {
+        padding: 2.5rem var(--side-padding);
+        border-bottom: var(--ui-border);
+        cursor: pointer;
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.2rem;
+        gap: 0.75rem;
+      }
+
+      .card-number {
+        font-family: "Silkscreen", monospace;
+        font-size: clamp(1.2rem, 5vw, 1.5rem);
+        background: var(--acid-yellow);
+        padding: 0.3rem 0.6rem;
+        border: var(--ui-border);
+        box-shadow: 4px 4px 0 var(--silver-foil);
+        flex-shrink: 0;
+      }
+
+      .mission-title {
+        font-size: clamp(1rem, 5vw, 1.2rem);
+        font-weight: 900;
+        text-transform: uppercase;
+        text-align: right;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .card-image-box {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border: var(--ui-border);
+        border-radius: 0 40px 0 40px;
+        overflow: hidden;
+        position: relative;
+        background: var(--zinc-900);
+        margin-bottom: 1.2rem;
+      }
+
+      .banner-scanline {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 12px;
+        background: var(--acid-yellow);
+        opacity: 0.25;
+        animation: scanline 5s linear infinite;
+      }
+
+      .tap-label {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        font-family: "Silkscreen", monospace;
+        font-size: 0.5rem;
+        color: var(--white);
+        background: rgba(0, 0, 0, 0.85);
+        padding: 4px 10px;
+        border: 1px solid var(--acid-yellow);
+      }
+
+      .card-cta {
+        font-family: "Silkscreen", monospace;
+        font-size: clamp(0.55rem, 3vw, 0.65rem);
+        color: var(--black);
+        font-weight: bold;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        line-height: 1.6;
+      }
+
+      /* DOSSIER LIST */
+      .list-header {
+        padding: calc(1rem + var(--safe-top)) var(--side-padding) 1rem;
+        background: var(--white);
+        border-bottom: var(--ui-border);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      /* BOTTONI - RIPRISTINO STILE ORIGINALE */
+      .back-btn {
+        background: var(--black);
+        color: var(--white);
+        padding: 0.6rem 1.2rem;
+        font-family: "Silkscreen";
+        font-size: 0.6rem;
+        margin-bottom: 1.2rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        border: 1px solid var(--black);
+        transition: all 0.1s ease;
+      }
+
+      .back-btn:active {
+        background: var(--acid-yellow);
+        color: var(--black);
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: var(--ui-border);
+        font-family: "Silkscreen";
+        font-size: 0.65rem;
+        box-shadow: 4px 4px 0 var(--silver-foil);
+        outline: none;
+        background: var(--white);
+      }
+
+      .dossier-list {
+        padding: 1.5rem var(--side-padding);
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+      }
+
+      .dossier-card {
+        width: 100%;
+        border: var(--ui-border);
+        border-radius: 25px;
+        padding: 1.5rem;
+        min-height: 180px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        cursor: pointer;
+        transition: transform 0.1s;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .verified-tag {
+        font-family: "Silkscreen", monospace;
+        font-size: 0.55rem;
+        color: var(--white);
+        background: var(--black);
+        padding: 3px 8px;
+        border: 1px solid var(--acid-yellow);
+        display: inline-block;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+        align-self: flex-start;
+      }
+
+      .dossier-card-title {
+        font-size: clamp(1.1rem, 5.5vw, 1.3rem);
+        font-weight: 900;
+        color: var(--white);
+        line-height: 1.1;
+        text-transform: uppercase;
+        margin: 0.5rem 0;
+      }
+
+      /* ARTICLE VIEW SPECIFICS */
+      .article-hero-image {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background-color: var(--white); /* Sfondo bianco per PNG trasparenti */
+        border-bottom: var(--ui-border);
+        display: none; /* Nascosto se non c'è immagine */
+        overflow: visible;
+      }
+
+      .article-hero-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .article-content {
+        padding: 0 var(--side-padding) 4rem;
+        width: 100%;
+      }
+
+      .article-meta-box {
+        font-family: "Silkscreen", monospace;
+        font-size: 0.6rem;
+        background: var(--zinc-900);
+        padding: 1rem 1.25rem;
+        margin-bottom: 2rem;
+        margin-top: 0;
+        border: var(--ui-border);
+        border-top: none;
+        color: var(--acid-yellow);
+        box-shadow: 5px 5px 0 var(--zinc-200);
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Fallback se l'immagine è nascosta per la meta-box */
+      #article-image-container:not([style*="display: block"])
+        + .article-content
+        .article-meta-box {
+        border-top: var(--ui-border);
+        margin-top: 2rem;
+      }
+
+      .article-header h1 {
+        font-size: clamp(1.6rem, 8vw, 2.2rem);
+        font-weight: 900;
+        line-height: 1.05;
+        text-transform: uppercase;
+        margin-bottom: 1.5rem;
+        color: var(--black);
+      }
+
+      .article-lead {
+        font-size: clamp(1rem, 5vw, 1.2rem);
+        font-weight: 800;
+        line-height: 1.4;
+        margin-bottom: 2.5rem;
+        border-left: 6px solid var(--acid-yellow);
+        padding-left: 1.25rem;
+        color: var(--black);
+      }
+
+      .article-body {
+        font-size: clamp(1rem, 4.5vw, 1.1rem);
+        line-height: 1.7;
+        color: #111;
+      }
+
+      .article-body p {
+        margin-bottom: 1.5rem;
+      }
+
+      .article-body strong {
+        background: var(--black);
+        color: var(--acid-yellow);
+        padding: 0 4px;
+        font-weight: 900;
+      }
+
+      .article-sources {
+        margin-top: 4rem;
+        padding: 1.5rem;
+        background: var(--zinc-100);
+        border: 2px dashed var(--black);
+        width: 100%;
+      }
+
+      /* FOOTER CONDIVISO */
+      .site-footer {
+        padding: 4rem var(--side-padding) calc(4rem + var(--safe-bottom));
+        background: var(--zinc-900);
+        border-top: var(--ui-border);
+        color: var(--white);
+        text-align: left;
+        width: 100%;
+      }
+
+      .footer-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 3rem;
+        gap: 1rem;
+      }
+
+      .footer-logo-box {
+        width: 4rem;
+        height: 4rem;
+        background: var(--acid-yellow);
+        border: var(--ui-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        color: var(--black);
+        font-family: "Silkscreen", monospace;
+        font-size: 1.8rem;
+        flex-shrink: 0;
+      }
+
+      .footer-label {
+        font-family: "Silkscreen", monospace;
+        font-size: 0.7rem;
+        color: var(--acid-yellow);
+        margin-bottom: 1rem;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .footer-text {
+        font-size: 0.85rem;
+        line-height: 1.6;
+        color: var(--zinc-200);
+      }
+
+      .footer-social-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: var(--white);
+        color: var(--black);
+        padding: 0.8rem 1.2rem;
+        text-decoration: none;
+        font-family: "Silkscreen", monospace;
+        font-size: 0.75rem;
+        font-weight: 700;
+        border: var(--ui-border);
+        box-shadow: 4px 4px 0 var(--acid-yellow);
+      }
+
+      .footer-bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 2rem;
+        font-family: "Silkscreen", monospace;
+        font-size: 0.55rem;
+        color: var(--silver-foil);
+        display: flex;
+        justify-content: space-between;
+      }
+
+      #menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 500px;
+        height: 100dvh;
+        background: var(--black);
+        z-index: 1000;
+        display: none;
+        padding: calc(2rem + var(--safe-top)) var(--side-padding);
+        color: var(--white);
+        overflow-y: auto;
+      }
+      #menu-overlay.active {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .menu-links {
+        margin-top: 3rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .menu-link {
+        font-family: "Silkscreen", monospace;
+        font-size: clamp(1rem, 5vw, 1.3rem);
+        color: var(--white);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        text-transform: uppercase;
+      }
+
+      .menu-link span {
+        color: var(--acid-yellow);
+        font-size: 0.8rem;
+      }
+
+      .bg-A {
+        background-image: url("asset/Coinquilini strani.png");
+        background-color: var(--white);
+        background-size: cover;
+        background-position: center;
+      }
+      .bg-B {
+        background-image: url("asset/Regia_del_delirio.png");
+        background-color: var(--white);
+        background-size: cover;
+        background-position: center;
+      }
+      .bg-C {
+        background-image: url("https://img.freepik.com/free-photo/blue-bird-perched-branch_23-2148110260.jpg");
+        background-color: #ffffff;
+        background-size: cover;
+        background-position: center;
+      }
+      .bg-D {
+        background-color: #3f3f46;
+      }
+
+      @keyframes scanline {
+        0% {
+          top: 0;
+        }
+        100% {
+          top: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SPLASH SCREEN -->
+    <div id="splash-screen">
+      <div class="splash-logo">TINFOIL<br />HAT</div>
+      <div class="splash-intro">
+        Ti sei mai chiesto perché tutti guardano nella stessa direzione tranne
+        te? Mentre gli altri scaricano il copione del giorno, noi abbiamo scelto
+        di riflettere il segnale. Metti il Tinfoil Hat e resta l’unico errore
+        nel loro sistema perfetto.
+      </div>
+
+      <div class="splash-sisters">
+        <div class="sister-char">
+          <div class="char-img-container">
+            <img
+              src="asset/Chia.png"
+              alt="Chia"
+              class="sister-portrait"
+              onerror="this.src='https://api.dicebear.com/7.x/pixel-art/svg?seed=Chia&backgroundColor=b6e3f4'"
+            />
+          </div>
+          <span class="sister-name">CHIA</span>
+        </div>
+        <div class="sister-char">
+          <div class="char-img-container">
+            <img
+              src="asset/Vale.png"
+              alt="Vale"
+              class="sister-portrait"
+              onerror="this.src='https://api.dicebear.com/7.x/pixel-art/svg?seed=Vale&backgroundColor=ffdfbf'"
+            />
+          </div>
+          <span class="sister-name">VALE</span>
+        </div>
+        <div class="sister-char">
+          <div class="char-img-container">
+            <img
+              src="asset/Cate.png"
+              alt="Cate"
+              class="sister-portrait"
+              onerror="this.src='https://api.dicebear.com/7.x/pixel-art/svg?seed=Cate&backgroundColor=c0aede'"
+            />
+          </div>
+          <span class="sister-name">CATE</span>
+        </div>
+      </div>
+
+      <button class="splash-btn" onclick="enterApp()">
+        indossa il cappello
+      </button>
+    </div>
+
+    <!-- MENU OVERLAY -->
+    <div id="menu-overlay">
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <div
+          style="
+            font-family: 'Silkscreen';
+            color: var(--acid-yellow);
+            font-size: 1.2rem;
+          "
+        >
+          SISTEMA NAVS
+        </div>
+        <button
+          class="back-btn"
+          onclick="toggleMenu()"
+          style="margin-bottom: 0"
+        >
+          CLOSE X
+        </button>
+      </div>
+
+      <div class="menu-links">
+        <a
+          href="#"
+          class="menu-link"
+          onclick="handleMenuClick('A', '01', 'Coinquilini strani', '#18181b')"
+          ><span>01</span> Coinquilini strani</a
+        >
+        <a
+          href="#"
+          class="menu-link"
+          onclick="handleMenuClick('B', '02', 'REGIA DEL DELIRIO', '#1e3a8a')"
+          ><span>02</span> REGIA DEL DELIRIO</a
+        >
+        <a
+          href="#"
+          class="menu-link"
+          onclick="handleMenuClick('C', '03', 'CAPTCHAs', '#7f1d1d')"
+          ><span>03</span> CAPTCHAs</a
+        >
+        <a
+          href="#"
+          class="menu-link"
+          onclick="handleMenuClick('D', '04', 'GIARDINO OLOGRAFICO', '#3f3f46')"
+          ><span>04</span> GIARDINO OLOGRAFICO</a
+        >
+      </div>
+
+      <h2
+        style="
+          font-family: 'Silkscreen';
+          color: var(--acid-yellow);
+          margin-top: 4rem;
+          font-size: 0.8rem;
+        "
+      >
+        IL MANIFESTO
+      </h2>
+      <p
+        style="
+          margin-top: 1rem;
+          font-weight: 800;
+          color: white;
+          font-size: 0.9rem;
+        "
+      >
+        Abbiamo smesso di scrollare. Abbiamo iniziato a guardare.
+      </p>
+    </div>
+
+    <div class="container">
+      <!-- VISTA 1: HOME -->
+      <div id="home-view" class="view active">
+        <header class="header-fixed">
+          <div class="live-ticker">
+            <div class="ticker-content">
+              <div class="ticker-item">
+                INDOSSA IL CAPPELLO PURE TU: LE FREQUENZE NON PERDONANO //
+              </div>
+              <div class="ticker-item">
+                IL 5G È SOLO UN AGGIORNAMENTO PER IL TUO BRAINROT //
+              </div>
+              <div class="ticker-item">
+                REALTÀ IN BUFFERING: ATTENDERE IL CARICAMENTO DELLE NUVOLE //
+              </div>
+              <div class="ticker-item">
+                HACKERA IL SISTEMA PRIMA CHE IL SISTEMA HACKERI IL TUO SONNO //
+              </div>
+              <div class="ticker-item">
+                LE SCIE CHIMICHE SONO I CAVI DELLA TUA LAN MENTALE //
+              </div>
+              <div class="ticker-item">
+                INDOSSA IL CAPPELLO PURE TU: LE FREQUENZE NON PERDONANO //
+              </div>
+              <div class="ticker-item">
+                IL 5G È SOLO UN AGGIORNAMENTO PER IL TUO BRAINROT //
+              </div>
+            </div>
+          </div>
+          <div class="nav-inner">
+            <div style="font-weight: 900; font-size: 1.1rem">TINFOIL HAT</div>
+            <div onclick="toggleMenu()" style="cursor: pointer">
+              <svg
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="black"
+                stroke-width="3"
+              >
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="10" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </div>
+          </div>
+        </header>
+
+        <section class="hero">
+          <h1>Ora sei un tinfoiliano</h1>
+          <h2><span>(ps. il cappello ti sta benissimo)</span></h2>
+          <p>
+            benvenuto su tinfoil hat dove l’alluminio è l’unico firewall che ci
+            tiene ancora <strong>(orgogliosamente)</strong> fuori di testa
+          </p>
+        </section>
+
+        <main>
+          <section
+            class="mission-card"
+            onclick="showDetail('A', '01', 'Coinquilini strani', '#18181b')"
+          >
+            <div class="card-header">
+              <div class="card-number">01</div>
+              <div class="mission-title">Coinquilini strani</div>
+            </div>
+            <div class="card-image-box bg-A">
+              <div class="banner-scanline"></div>
+              <div class="tap-label">OPEN DATABASE</div>
+            </div>
+            <div class="card-footer-info">
+              <span class="card-cta"
+                >#animali #alieni #rettiliani #ufo #specieestinte #biologia
+                #evoluzionismo #fauna #ibridi #creature</span
+              >
+            </div>
+          </section>
+
+          <section
+            class="mission-card"
+            onclick="showDetail('B', '02', 'REGIA DEL DELIRIO', '#1e3a8a')"
+          >
+            <div class="card-header">
+              <div class="card-number">02</div>
+              <div class="mission-title">REGIA DEL DELIRIO</div>
+            </div>
+            <div class="card-image-box bg-B">
+              <div class="banner-scanline"></div>
+              <div class="tap-label">OPEN DATABASE</div>
+            </div>
+            <div class="card-footer-info">
+              <span class="card-cta"
+                >#socialmedia #comunicazione #propaganda #disinformazione
+                #algoritmi #censura #media #politica #società #persuasione
+                #psicologia #fake-news</span
+              >
+            </div>
+          </section>
+
+          <section
+            class="mission-card"
+            onclick="showDetail('C', '03', 'CAPTCHAs', '#7f1d1d')"
+          >
+            <div class="card-header">
+              <div class="card-number">03</div>
+              <div class="mission-title">CAPTCHAs</div>
+            </div>
+            <div class="card-image-box bg-C">
+              <div class="banner-scanline"></div>
+              <div class="tap-label">OPEN DATABASE</div>
+            </div>
+            <div class="card-footer-info">
+              <span class="card-cta"
+                >#biopolitica #salute #sanità #genetica #bioingegneria #tatuaggi
+                #medicina #dna #biotecnologie #corpo-umano #identità-digitale
+                #estetica #privacy</span
+              >
+            </div>
+          </section>
+
+          <section
+            class="mission-card"
+            onclick="showDetail('D', '04', 'GIARDINO OLOGRAFICO', '#3f3f46')"
+          >
+            <div class="card-header">
+              <div class="card-number">04</div>
+              <div class="mission-title">GIARDINO OLOGRAFICO</div>
+            </div>
+            <div class="card-image-box bg-D">
+              <div class="banner-scanline"></div>
+              <div class="tap-label">OPEN DATABASE</div>
+            </div>
+            <div class="card-footer-info">
+              <span class="card-cta"
+                >#clima #ambiente #meteorologia #ecologia #natura #sostenibilità
+                #atmosfera #cambiamenticlimatici #ecosistema #inquinamento</span
+              >
+            </div>
+          </section>
+        </main>
+
+        <footer class="site-footer">
+          <div class="footer-top">
+            <div class="footer-logo-box">T</div>
+            <div style="text-align: right">
+              <span class="footer-label">FOLLOW THE SIGNAL</span>
+              <a
+                href="https://www.instagram.com/tiinfoil_hat/"
+                target="_blank"
+                class="footer-social-btn"
+                >INSTAGRAM_IG</a
+              >
+            </div>
+          </div>
+          <div class="footer-section">
+            <span class="footer-label">Disclaimer</span>
+            <p class="footer-text">
+              Tinfoil Hat è un progetto editoriale fittizio realizzato per scopi
+              didattici universitari. I contenuti e le teorie esposte sono opere
+              di finzione con fini satirici e creativi. Questo sito non intende
+              diffondere informazioni reali o dannose.
+            </p>
+          </div>
+          <div class="footer-bottom">
+            <span>©2026 Tinfoil Hat</span>
+          </div>
+        </footer>
+      </div>
+
+      <!-- VISTA 2: LISTA ARTICOLI -->
+      <div id="detail-view" class="view">
+        <header class="list-header">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+            "
+          >
+            <button class="back-btn" onclick="navigateTo('home-view')">
+              ← BACK TO HOME
+            </button>
+            <div onclick="toggleMenu()" style="cursor: pointer">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="black"
+                stroke-width="3"
+              >
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="10" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </div>
+          </div>
+          <div
+            class="card-header"
+            style="margin-bottom: 0.8rem; align-items: flex-end"
+          >
+            <div class="card-number" id="detail-num" style="font-size: 1.1rem">
+              00
+            </div>
+            <div
+              class="mission-title"
+              id="detail-title"
+              style="font-size: 0.95rem"
+            >
+              TITLE
+            </div>
+          </div>
+          <input
+            type="text"
+            id="dossier-search"
+            class="search-input"
+            placeholder="CERCA NEL DATABASE..."
+            oninput="handleSearch()"
+          />
+        </header>
+        <div class="dossier-list" id="dossier-list"></div>
+        <footer class="site-footer">
+          <div class="footer-top">
+            <div class="footer-logo-box">T</div>
+            <div style="text-align: right">
+              <span class="footer-label">FOLLOW THE SIGNAL</span>
+              <a
+                href="https://www.instagram.com/tiinfoil_hat/"
+                target="_blank"
+                class="footer-social-btn"
+                >INSTAGRAM_IG</a
+              >
+            </div>
+          </div>
+          <div class="footer-section">
+            <span class="footer-label">Disclaimer</span>
+            <p class="footer-text">
+              Tinfoil Hat è un progetto editoriale fittizio realizzato per scopi
+              didattici universitari. I contenuti e le teorie esposte sono opere
+              di finzione con fini satirici e creativi. Questo sito non intende
+              diffondere informazioni reali o dannose.
+            </p>
+          </div>
+          <div class="footer-bottom">
+            <span>©2026 Tinfoil Hat</span>
+          </div>
+        </footer>
+      </div>
+
+      <!-- VISTA 3: ARTICOLO -->
+      <div id="article-view" class="view">
+        <header class="list-header">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <button
+              class="back-btn"
+              onclick="navigateTo('detail-view')"
+              style="margin-bottom: 0"
+            >
+              ← BACK TO LIST
+            </button>
+            <div onclick="toggleMenu()" style="cursor: pointer">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="black"
+                stroke-width="3"
+              >
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="10" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </div>
+          </div>
+        </header>
+
+        <!-- SEZIONE IMMAGINE HERO ARTICOLO -->
+        <div id="article-image-container" class="article-hero-image">
+          <img id="article-img-element" src="" alt="Dossier Visual" />
+        </div>
+
+        <div class="article-content">
+          <div class="article-meta-box" id="article-meta">
+            <span>REPORT METADATA</span>LOADING...
+          </div>
+          <div class="article-header">
+            <h1 id="article-title">TITOLO DOSSIER</h1>
+          </div>
+          <div class="article-lead" id="article-lead">Lead</div>
+          <div class="article-body" id="article-body">Contenuto</div>
+          <div class="article-sources" id="article-sources">
+            <span class="sources-label">DECRYPTED SOURCES LINK</span>
+            <div id="sources-list"></div>
+          </div>
+        </div>
+
+        <footer class="site-footer">
+          <div class="footer-top">
+            <div class="footer-logo-box">T</div>
+            <div style="text-align: right">
+              <span class="footer-label">FOLLOW THE SIGNAL</span>
+              <a
+                href="https://www.instagram.com/tiinfoil_hat/"
+                target="_blank"
+                class="footer-social-btn"
+                >INSTAGRAM_IG</a
+              >
+            </div>
+          </div>
+          <div class="footer-section">
+            <span class="footer-label">Disclaimer</span>
+            <p class="footer-text">
+              Tinfoil Hat è un progetto editoriale fittizio realizzato per scopi
+              didattici universitari. I contenuti e le teorie esposte sono opere
+              di finzione con fini satirici e creativi. Questo sito non intende
+              diffondere informazioni reali o dannose.
+            </p>
+          </div>
+          <div class="footer-bottom">
+            <span>©2026 Tinfoil Hat</span>
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      const splash = document.getElementById("splash-screen");
+      const searchInput = document.getElementById("dossier-search");
+      let currentPrefix = "";
+      let currentBgColor = "";
+
+      const dossierData = {
+        A: [
+          {
+            title: "LE ZANZARE HANNO IL MOTORE A SCOPPIO",
+            author: "Vale",
+            risk: "98%",
+            time: "3 MIN",
+            articleImg: "asset/zanzara.png",
+            lead: "Se pensi che ti abbiano punto perché sei dolce sappi che sei solo un bancomat di DNA.",
+            body: `<p>Smettetela di spruzzarvi addosso quelle lozioni al profumo di limone sperando di tenere lontana la natura, perché la natura non c'entra nulla con quello che vi ronza nelle orecchie alle tre di notte. Quelle che chiamate zanzare sono in realtà <strong>droni ipodermici biomimetici</strong>, aghi volanti progettati con una precisione che nessun insetto nato dal fango potrebbe mai sognare. Avete mai fatto caso al ronzio? Non è un battito d’ali, è il sibilo di un <strong>micro-motore a ultrasuoni</strong> che serve a scansionare la vostra temperatura superficiale per trovare il punto esatto in cui inserire la sonda. Non vi stanno "pungendo" per fame, vi stanno <strong>campionando il DNA</strong> per inviare un aggiornamento in tempo reale al database genetico centrale. Ogni volta che una di queste macchinette si posa su di voi, state subendo un <strong>prelievo forzato senza anestesia</strong> e senza privacy.</p>
+                   <p>Il sangue estratto serve solo come supporto per i dati: il Sistema ha bisogno di verificare costantemente la vostra stabilità molecolare per essere sicuro che stiate ancora processando correttamente la realtà che vi viene somministrata. E se pensate che la bolla rossa che compare dopo sia una reazione allergica, siete rimasti al tutorial della biologia da asilo. Quel prurito è la prova che il <strong>nanotracker liquido</strong> è stato iniettato con successo sotto la vostra pelle. È un’antenna temporanea, un sensore chimico che mappa i vostri spostamenti per 48 ore consecutive, tracciando ogni singola vibrazione dei vostri muscoli. </p>
+                   <p>L’unico modo per interrompere il flusso di dati prima che il prelievo diventi irreversibile è avere sempre a portata di mano la racchetta elettrica <strong><em>Insect Killer di Flortis</em></strong>. Non si tratta di un accessorio da giardino, ma di un vero e proprio <strong>generatore di scariche ad alto voltaggio</strong> progettato per mandare in corto circuito i processori alari dei zanza-droni, friggendo i loro sensori prima che possano iniettare il tracker. </p>
+                   <p>Se schiacciandone una vedete uscire del rosso, ricordatevi che quello è il vostro <strong>backup genetico</strong> che sta venendo caricato sul server mentre voi cercate inutilmente di dormire in una stanza che è diventata un <strong>laboratorio di analisi clandestino</strong>.</p>
+                   <a href="https://www.flortis.it/ita/animali-molesti/zanzare/dispositivi-elettrici/racchetta-elettrica-insect-killer target="_blank"><img src="asset/Advertorial.png" alt="Insect Killer di Flortis" style="width: 100%; border: var(--ui-border); margin-top: 1.5rem; display: block; background: white;"></a>`,
+            sources: [],
+          },
+          {
+            title: "I BAMBINI NATI DOPO IL 2022 NON HANNO L'ANIMA",
+            author: "Chia",
+            risk: "85%",
+            time: "2 MIN",
+            lead: "...",
+            body: "<p>Le rilevazioni bio-energetiche mostrano una totale assenza di spettro animico nelle nuove generazioni di 'natali digitali'.</p>",
+            sources: [],
+          },
+          {
+            title: "CHI HA MESSO I DENTI AI PESCI DELLE FONTANE?",
+            author: "Cate",
+            risk: "92%",
+            time: "4 MIN",
+            lead: "...",
+            body: "<p>Analisi condotta sulla fauna delle fontane pubbliche: individuati impianti dentali in titanio biomimetico per il controllo della popolazione NPC.</p>",
+            sources: [],
+          },
+          {
+            title: "I CAVALLI SONO SOLO PERSONE MOLTO ALTE IN COSTUME",
+            author: "Chia",
+            risk: "70%",
+            time: "2 MIN",
+            lead: "...",
+            body: "<p>Abbiamo intercettato cerniere lampo mascherate sotto il manto. Chi c'è davvero lì dentro?</p>",
+            sources: [],
+          },
+          {
+            title: "NON GUARDATE NEGLI OCCHI LE CAPRE DEL TRENTINO",
+            author: "Vale",
+            risk: "MAX",
+            time: "3 MIN",
+            lead: "...",
+            body: "<p>Hanno pupille rettangolari per un motivo: sono scanner ottici per la mappatura del territorio montano.</p>",
+            sources: [],
+          },
+          {
+            title: "PERCHÉ IL TUO CANE ABBAIA IN CODICE MORSE?",
+            author: "Cate",
+            risk: "9.5",
+            time: "5 MIN",
+            lead: "...",
+            body: "<p>Il miglior amico dell'uomo è in realtà il miglior infiltrato del Sistema nel tuo salotto. Decriptato il database sonoro: i 'bau' sono report dettagliati sulle tue abitudini d'acquisto.</p>",
+            sources: [],
+          },
+        ],
+        B: [
+          {
+            title:
+              "CIME TEMPESTOSE È UN TEST PER VEDERE IF IL NOSTRO BRAINROT È COMPATIBILE CON L’OTTOCENTO.",
+            author: "Cate",
+            risk: "CRIT",
+            time: "2 MIN",
+            articleImg: "asset/CimeTempestose_MargotRobbie_JacobElordi.png",
+            lead: "Dietro l'estetica di Emerald Fennell si nasconde un test di ingegneria sociale: ecco perché il nuovo Wuthering Heights sta resettando il tuo sistema operativo.",
+            body: `<p>Mentre i <strong>critici boomer</strong> con gli occhiali sporchi di sugo si chiedono se il film sia "fedele al libro", noi che abbiamo il terzo occhio aperto abbiamo già capito tutto: questo film è un <strong>virus per il cervello</strong>, un aggiornamento software che ti scarica il <strong>malware</strong> direttamente nelle sinapsi. Non fatevi fregare dalla faccia da <strong>asset di Unreal Engine</strong> di <strong>Jacob Elordi</strong>; non è un attore, è chiaramente un <strong>prototipo di androide</strong> mandato dal governo per vedere se siamo così cotti dai social da accettare un tizio che sembra uscito da una sfilata di lusso nel fango dell'Ottocento. Se guardi il film di <strong>Emerald Fennell</strong> e non senti il tuo cervello fare il rumore di un modem 56k che esplode, congratulazioni: il tuo sistema operativo è già stato hackerato e ora sei ufficialmente un <strong>bot della brughiera 2.0</strong>.</p>
+                   <p>Il vero delirio inizia quando capisci che <strong>Emily Brontë</strong> non è mai esistita, o meglio, era probabilmente una <strong>versione beta di ChatGPT</strong> mandata nel 1847 per spammare caos narrativo e vedere quanto tempo ci avremmo messo a trasformarlo in un trend di <strong>TikTok</strong>. Mettere le canzoni di <strong>Charli XCX</strong> tra le pecore non è "scelta autoriale", è un <strong>segnale acustico a bassa frequenza</strong> progettato per attivare il gene della <strong>malattia estetica</strong>. Ogni volta che parte il beat, il tuo DNA viene riscritto per farti credere che sia normale scappare con un <strong>tipo tossico</strong> solo perché ha la mascella scolpita nel marmo di Carrara. E non parliamo dei disegni di Isabella con quei funghi e fiori che sembrano usciti da un manuale di biologia "vietato ai minori": non è arte, è un test di Rorschach per mappare quanto siamo degenerati e vendere i nostri sogni ai <strong>colossi del marketing</strong> dei fertilizzanti organici.</p>
+                   <p>Il colpo di grazia arriva con lo scambio di ruoli tra Heathcliff e Linton, che non è inclusività, ma un esperimento di <strong>dissonanza cognitiva pura</strong> per friggerci le ultime due cellule grigie rimaste. Scambiando le etnie e i privileges, il film ci costringe a vivere in una simulazione dove le <strong>leggi della fisica</strong> e della storia sono opzionali come i <strong>termini di servizio</strong> che accetti senza leggere. Il sangue finale che scorre nel letto? È chiaramente sciroppo di fragola della Nestlé usato come liquido di raffreddamento per i server su cui gira questo immenso glitch cinematografico. Il film si spegne quando muore Cathy perché il <strong>server ha finito la RAM</strong> e non riesce più a renderizzare il resto del mondo. Svegliatevi, pecoroni: quelle che chiamate "Cime" sono solo antenne di disturbo del segnale 5G travestite da colline per impedirvi di vedere che <strong>la realtà è una ciambella</strong> e noi siamo le briciole.</p>`,
+            sources: ["https://youtu.be/0wjSgrHCp9o?si=uybJC3m-6POP-WNp"],
+          },
+          {
+            title: "NON ESISTONO PIÙ LE PERSONE NORMALI SUL BUS",
+            author: "Vale",
+            risk: "HIGH",
+            time: "3 MIN",
+            lead: "...",
+            body: "<p>Ogni passeggero della linea 90 è un bot programmato per fissarti finché non distogli lo sguardo. La densità di NPC sui mezzi pubblici ha raggiunto il punto critico.</p>",
+            sources: [],
+          },
+          {
+            title: "LA REALTÀ È UNA REPLICA DI UN FILM DEL 1998",
+            author: "Chia",
+            risk: "MAX",
+            time: "3 MIN",
+            lead: "...",
+            body: "<p>Le sceneggiatures del 1998 sono state caricate nel generatore di eventi globali. Stiamo vivendo un loop narrativo infinito tipo 'The Truman Show' senza licenza.</p>",
+            sources: [],
+          },
+          {
+            title: "LA TUA VITA È UN TEST DE GRADIMENTO PER ALIENI",
+            author: "Cate",
+            risk: "MED",
+            time: "2 MIN",
+            lead: "...",
+            body: "<p>Siamo contenuti per una piattaforma di streaming intergalattica. Le tue lacrime sono il peak-performance del palinsesto serale.</p>",
+            sources: [],
+          },
+          {
+            title: "CHI PAGA GLI ATTORI CHE FANNO FINTA DI ESSERE TUOI AMICI",
+            author: "Vale",
+            risk: "HIGH",
+            time: "4 MIN",
+            lead: "...",
+            body: "<p>Abbiamo intercettato i contratti: i tuoi amici have clausole di riservatezza e turni di 8 ore per simulare affetto. Quella birra è pagata dai fondi neri.</p>",
+            sources: [],
+          },
+          {
+            title: "IL TG È UN CORSO DI ADDESTRAMENTO PER ROBOT",
+            author: "Chia",
+            risk: "HIGH",
+            time: "2 MIN",
+            lead: "...",
+            body: "<p>Le frequenze vocali dei giornalisti servono a mappare la risposta neurale delle intelligenze sintetiche serie Alpha infiltrate tra noi.</p>",
+            sources: [],
+          },
+        ],
+        C: [
+          {
+            title: "LA SETTA DELLE MOM SI NASCONDE SUI TUOI BICIPITI.",
+            author: "Chia",
+            risk: "MED",
+            time: "2 MIN",
+            lead: "Se pensate che il classico cuore rosso con la scritta 'MOM' sia solo un tributo commovente alla donna che vi ha messo al mondo, siete caduti nella trappola emotiva più vecchia della storia.",
+            body: `<p>Se pensate che il classico cuore rosso con la scritta "MOM" sia solo un tributo commovente alla donna che vi ha messo al mondo, siete caduti nella <strong>trappola emotiva più vecchia della storia</strong>. La realtà è molto più specifica e decisamente meno casta. Quell'ancora col cuore o quel font old school non sono un omaggio alla propria madre, ma il segnale di riconoscimento definitivo per l’<strong>Ordine delle Milf (ODM)</strong>, una fratellanza segreta che opera tra i bar di periferia e gli studi di tatuaggi più loschi del mondo. Tatuarsi "MOM" non è un atto di devozione filiale, è un’autodichiarazione di intenti: è il <strong>codice d'accesso</strong> per una rete sotterranea di cacciatori di madri degli altri.</p>
+                   <p>Il cuore rosso funge da segnaletica stradale per gli iniziati. Avete mai notato come chi ha questo tatuaggio sembri always avere quel <strong>sorriso d'intesa</strong> quando incrocia una mamma al parchetto? Non è gentilezza, è recognition del target. La leggenda della "mamma" è stata creata solo per permettere a questa setta di girare indisturbata: se un poliziotto o la tua ragazza ti vedono quel tatuaggio, pensano "oh, che tesoro di ragazzo", mentre in realtà stai portando sulla pelle il <strong>badge magnetico</strong> per i raduni clandestini nei seminterrati dei bingo.</p>`,
+            sources: [],
+          },
+          {
+            title: "PERCHÉ IL TUO SANGUE HA IL SAPORE DI METALLO?",
+            author: "Vale",
+            risk: "HIGH",
+            time: "3 MIN",
+            lead: "...",
+            body: "<p>Il Sistema ha iniettato particelle ferrose per migliorare la ricezione del segnale satellitare direttamente nel flusso sanguigno. Ecco perché senti nichel dopo il caffè.</p>",
+            sources: [],
+          },
+          {
+            title: "COSA SUCCEDE AI TUOI DATI QUANDO VAI IN BAGNO.",
+            author: "Chia",
+            risk: "CRIT",
+            time: "4 MIN",
+            lead: "...",
+            body: "<p>Individuata una rete di bio-sensori nelle fognature urbane: il tuo DNA viene analizzato ad ogni scarico per profilare le tue intolleranze e venderti ADS mirate.</p>",
+            sources: [],
+          },
+          {
+            title: "I PELATI STANNO FACENDO SOFFOCARE IL MONDO",
+            author: "Cate",
+            risk: "MAX",
+            time: "2 MIN",
+            lead: "...",
+            body: "<p>Meno capelli significa più rifrazione solare: un design di sistema per aumentare l'albedo terrestre e accelerare l'effetto serra olografico.</p>",
+            sources: [],
+          },
+          {
+            title: "PERCHÉ IL TUO SANGUE HA IL SAPORE DI METALLO?",
+            author: "Vale",
+            risk: "HIGH",
+            time: "3 MIN",
+            lead: "...",
+            body: "<p>Protocolli di iniezione onirica rilevati nelle ore REM: le aziende pagano per inserire loghi e jingle nel tuo subconscio durante il sonno profondo.</p>",
+            sources: [],
+          },
+          {
+            title: "NON SEI CARNE: SEI SOLO UN RENDER MOLTO DENSO",
+            author: "Chia",
+            risk: "EXTREME",
+            time: "5 MIN",
+            lead: "...",
+            body: "<p>Se premi forte sulla pelle vedi i pixel? No, è la densità poligonale. Il dolore è solo un errore di calcolo del server nella collisione tra asset renderizzati.</p>",
+            sources: [],
+          },
+        ],
+        D: [
+          {
+            title: "GLI AEREI NON PARTONO SE IL BUFFERING DELLE NUVOLE È LENTO",
+            author: "Chia",
+            risk: "HIGH",
+            time: "3 MIN",
+            lead: "Stanno aspettando che il Wi-Fi delle scie chimiche si colleghi ai tuoi neuroni.",
+            body: `<p>Mentre i passeggero medi con il cuscino da viaggio al collo si lamentano dei ritardi di tre ore per un volo low cost, noi che abbiamo scaricato la <strong>patch del risveglio</strong> sappiamo che il tabellone delle partenze è solo un'interfaccia di caricamento per una realtà parallela. Non fatevi fregare dalla scusa del "traffico aereo" o del "guasto tecnico"; la verità è che il tuo volo per Ibiza è in ritardo perché i tecnici di manutenzione hanno bisogno di tempo per ricaricare le <strong>cartucce di inchiostro chimico</strong> nei serbatoi delle ali. Le famose scie che vedi nel cielo non sono condensa e non servono nemmeno più a controllare il meteo (quella è roba da boomer complottisti del 2010) oggi le scie chimiche sono letteralmente dei <strong>cavi in fibra ottica gassosa</strong> che servono a trasmettere il segnale Wi-Fi direttamente nei tuoi sogni. Se il tuo aereo non parte, è semplicemente perché il server dei cieli sta facendo un aggiornamento forzato e deve aspettare che il "fumo magico" si depositi correttamente sopra le città per sincronizzare i nostri desideri con gli sconti del Prime Day.</p>
+                   <p>Il vero delirio inizia quando capisci che il ritardo al gate è una tecnica di condizionamento psicologico per abbassare le tue difese immunitarie al <strong>brainrot</strong> e prepararti all'inalazione forzata ad alta quota. Ogni volta che una hostess ti sorride dicendo che "stiamo aspettando l'autorizzazione della torre di controllo", sta in realtà verificando che il tuo <strong>microchip sottocutaneo</strong> sia configurato correttamente per ricevere le frequenze trasmesse dalle scie degli aerei precedenti. Gli aerei che girano a vuoto sopra l'aeroporto non stanno consumando carburante, stanno letteralmente "disegnando" una <strong>rete neurale nel cielo</strong> per impedirci di vedere che le nuvole sono in realtà dei pixel a bassa risoluzione messi lì per nascondere che il sole è una lampadina LED gigante a risparmio energetico. Se guardi bene fuori dal finestrino durante il decollo e senti un ronzio nelle orecchie, congratulazioni: sei stato appena collegato al <strong>Bluetooth atmosferico del Sistema</strong> e il tuo prossimo pensiero non sarà il tuo, ma un file .mp3 caricato direttamente dal Ministero delle Vacanze Obbligatorie.</p>
+                   <p>Il colpo di grazia arriva quando realizzi che il carburante degli aerei è in realtà una miscela di <strong>succo di aloe vera radioattivo</strong> e dati criptati che, una volta bruciati, rilasciano nell'aria una nebbia che ci rende tutti più propensi ad accettare che pagare dieci euro per un panino di plastica in aeroporto sia una scelta libera. Il ritardo è fondamentale perché permette alla nebbia chimica di raggiungere la densità perfetta per resettare la tua percezione del tempo: ecco perché dopo due ore al gate non sai più se sei a Malpensa o dentro un <strong>livello di Minecraft non renderizzato</strong>. Si vola solo quando la densità dello sciroppo radioattivo nell'aria è tale da farti credere che un tubo di metallo arrugginito possa effettivamente galleggiare sopra un cielo di LED.</p>
+                   <img src="asset/Chia_Vale_Cate_Scie_Aeree.png" alt="Advertorial" style="width: 100%; border: var(--ui-border); margin-top: 1.5rem; display: block; background: white;">`,
+            sources: [],
+          },
+          {
+            title: "LE MONTAGNE SONO SOLO RIFIUTI RICOPERTI DI TELONI",
+            author: "Cate",
+            risk: "MAX",
+            time: "3 MIN",
+            lead: "...",
+            body: "<p>Le Alpi sono enormi accumuli di scarti polimerici rivestiti con texture di granito e finta neve per non allarmare la popolazione.</p>",
+            sources: [],
+          },
+          {
+            title: "L'ARIA CHE RESPIRI È UN LIQUIDO",
+            author: "Chia",
+            risk: "HIGH",
+            time: "2 MIN",
+            lead: "...",
+            body: "<p>I polmoni si sono adattati a processare un fluido iper-ossigenato che serve a mantenere le nostre cellule in uno stato di ibernazione percettiva costante.</p>",
+            sources: [],
+          },
+          {
+            title: "PERCHÉ GLI ALBERI NON FANNO PIÙ IL RUMORE DI UNA VOLTA?",
+            author: "Vale",
+            risk: "9.2",
+            time: "4 MIN",
+            lead: "...",
+            body: "<p>Nelle foreste pubbliche sono stati installati micro-speaker direzionali: il fruscio delle foglie è un loop .mp3 a 128kbps per coprire i generatori sotterranei.</p>",
+            sources: [],
+          },
+          {
+            title: "NON CREDERE A CHI DICE DI AVER VISTO IL MARE",
+            author: "Cate",
+            risk: "CRIT",
+            time: "2 MIN",
+            lead: "...",
+            body: "<p>L'orizzonte blu è solo un pannello LED a 8K montato per nascondere il vuoto. Le onde sono generate da enormi pistoni idraulici.</p>",
+            sources: [],
+          },
+          {
+            title: "L'ESTATE È UN ESPERIMENTO DI COTTURA ANTROPOLOGICA",
+            author: "Chia",
+            risk: "9.5",
+            time: "3 MIN",
+            lead: "...",
+            body: "<p>Le ondate di calore sono stress-test per mappare la velocità di decomposizione dei tessuti umani sotto radiazione controllata.</p>",
+            sources: [],
+          },
+        ],
+      };
+
+      function renderList(data) {
+        const list = document.getElementById("dossier-list");
+        list.innerHTML = "";
+        data.forEach((item, index) => {
+          const card = document.createElement("div");
+          card.className = "dossier-card";
+          card.style.backgroundColor = currentBgColor;
+          if (index % 2 === 1) card.style.filter = "brightness(1.1)";
+          card.onclick = () => showArticle(item, currentPrefix, index);
+          const content = document.createElement("div");
+          content.innerHTML = `
+            <div class="verified-tag">VERIFIED BY ${item.author.toUpperCase()}</div>
+            <div class="dossier-card-title">${item.title}</div>
+            <div style="font-family:'Silkscreen'; color:var(--acid-yellow); font-size:0.75rem; text-align:right;">THREAT: ${
+              item.risk
+            }</div>
+          `;
+          card.appendChild(content);
+          list.appendChild(card);
+        });
+      }
+
+      function showDetail(prefix, num, title, bgColor) {
+        currentPrefix = prefix;
+        currentBgColor = bgColor;
+        document.getElementById("detail-num").innerText = num;
+        document.getElementById("detail-title").innerText = title;
+        renderList(dossierData[prefix] || []);
+        navigateTo("detail-view");
+      }
+
+      function showArticle(item, prefix, index) {
+        document.getElementById("article-title").innerText = item.title;
+        document.getElementById("article-lead").innerText = item.lead;
+        document.getElementById("article-body").innerHTML = item.body;
+        document.getElementById(
+          "article-meta"
+        ).innerHTML = `<span>REPORT METADATA</span>AUTH: ${item.author.toUpperCase()} // TIME: ${
+          item.time || "2 MIN"
+        }`;
+
+        // GESTIONE IMMAGINE HERO
+        const imgContainer = document.getElementById("article-image-container");
+        const imgElement = document.getElementById("article-img-element");
+        if (item.articleImg) {
+          imgElement.src = item.articleImg;
+          imgContainer.style.display = "block";
+        } else {
+          imgContainer.style.display = "none";
+        }
+
+        const sSec = document.getElementById("article-sources");
+        const sList = document.getElementById("sources-list");
+        sList.innerHTML = "";
+        if (item.sources && item.sources.length > 0) {
+          sSec.style.display = "block";
+          item.sources.forEach((link) => {
+            const a = document.createElement("a");
+            a.href = link;
+            a.target = "_blank";
+            a.className = "source-link";
+            a.innerText = link;
+            sList.appendChild(a);
+          });
+        } else {
+          sSec.style.display = "none";
+        }
+        navigateTo("article-view");
+      }
+
+      function handleSearch() {
+        const q = searchInput.value.toUpperCase();
+        const filtered = (dossierData[currentPrefix] || []).filter(
+          (it) => it.title.includes(q) || it.author.toUpperCase().includes(q)
+        );
+        renderList(filtered);
+      }
+
+      function enterApp() {
+        splash.style.opacity = "0";
+        setTimeout(() => {
+          splash.style.display = "none";
+        }, 500);
+      }
+
+      // NUOVA FUNZIONE PER GESTIRE IL CLICK DAL MENU
+      function handleMenuClick(prefix, num, title, bgColor) {
+        toggleMenu(); // Chiude il menu
+        showDetail(prefix, num, title, bgColor); // Mostra la sezione
+      }
+
+      function toggleMenu() {
+        document.getElementById("menu-overlay").classList.toggle("active");
+      }
+      function navigateTo(viewId) {
+        document
+          .querySelectorAll(".view")
+          .forEach((v) => v.classList.remove("active"));
+        const target = document.getElementById(viewId);
+        target.classList.add("active");
+        target.scrollTop = 0;
+        if (viewId === "article-view" || viewId === "detail-view") {
+          target.style.animation = "slideIn 0.3s ease-out";
+        }
+      }
+    </script>
+  </body>
+</html>
