@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
   <head>
     <meta charset="UTF-8" />
@@ -710,7 +710,10 @@
               src="asset/Chia.png"
               alt="Chia"
               class="sister-portrait"
-              onerror="this.src='https://api.dicebear.com/7.x/pixel-art/svg?seed=Chia&backgroundColor=b6e3f4'"
+              onerror="
+                this.src =
+                  'https://api.dicebear.com/7.x/pixel-art/svg?seed=Chia&backgroundColor=b6e3f4'
+              "
             />
           </div>
           <span class="sister-name">CHIA</span>
@@ -721,7 +724,10 @@
               src="asset/Vale.png"
               alt="Vale"
               class="sister-portrait"
-              onerror="this.src='https://api.dicebear.com/7.x/pixel-art/svg?seed=Vale&backgroundColor=ffdfbf'"
+              onerror="
+                this.src =
+                  'https://api.dicebear.com/7.x/pixel-art/svg?seed=Vale&backgroundColor=ffdfbf'
+              "
             />
           </div>
           <span class="sister-name">VALE</span>
@@ -732,7 +738,10 @@
               src="asset/Cate.png"
               alt="Cate"
               class="sister-portrait"
-              onerror="this.src='https://api.dicebear.com/7.x/pixel-art/svg?seed=Cate&backgroundColor=c0aede'"
+              onerror="
+                this.src =
+                  'https://api.dicebear.com/7.x/pixel-art/svg?seed=Cate&backgroundColor=c0aede'
+              "
             />
           </div>
           <span class="sister-name">CATE</span>
@@ -755,7 +764,7 @@
       >
         <div
           style="
-            font-family: 'Silkscreen';
+            font-family: &quot;Silkscreen&quot;;
             color: var(--acid-yellow);
             font-size: 1.2rem;
           "
@@ -1415,11 +1424,8 @@
         document.getElementById("article-title").innerText = item.title;
         document.getElementById("article-lead").innerText = item.lead;
         document.getElementById("article-body").innerHTML = item.body;
-        document.getElementById(
-          "article-meta"
-        ).innerText = `AUTH: ${item.author.toUpperCase()} // TIME: ${
-          item.time || "2 MIN"
-        }`;
+        document.getElementById("article-meta").innerText =
+          `AUTH: ${item.author.toUpperCase()} // TIME: ${item.time || "2 MIN"}`;
 
         // GESTIONE IMMAGINE HERO
         const imgContainer = document.getElementById("article-image-container");
@@ -1453,7 +1459,7 @@
       function handleSearch() {
         const q = searchInput.value.toUpperCase();
         const filtered = (dossierData[currentPrefix] || []).filter(
-          (it) => it.title.includes(q) || it.author.toUpperCase().includes(q)
+          (it) => it.title.includes(q) || it.author.toUpperCase().includes(q),
         );
         renderList(filtered);
       }
